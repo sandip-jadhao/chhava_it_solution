@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import emailjs from '@emailjs/browser';
 
 const Home = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -28,13 +30,40 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('Sending...');
-    // Supabase logic can be re-enabled here
+    
+    try {
+      // 1. Save data to Supabase Database (Keeps a record in your DB)
+      const { error: dbError } = await supabase
+        .from('contacts')
+        .insert([{ name: formData.name, email: formData.email, message: formData.message }]);
+
+      if (dbError) throw dbError;
+
+      // 2. Send Email Alert via EmailJS (Triggers an email to your inbox)
+      // IMPORTANT: Replace these three strings with your actual EmailJS keys!
+      await emailjs.send(
+        'service_wmdolpj',      // Replace with your EmailJS Service ID
+        'service_wmdolpj',     // Replace with your EmailJS Template ID
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        },
+        'YOUR_PUBLIC_KEY'       // Replace with your EmailJS Public Key
+      );
+
+      setStatus('Message sent successfully! We will contact you soon.');
+      setFormData({ name: '', email: '', message: '' }); // Clear the form fields
+      
+    } catch (error) {
+      console.error('Submission error:', error);
+      setStatus('Failed to send message. Please try again or use WhatsApp.');
+    }
   };
 
   return (
     <div className="font-sans text-gray-800 bg-gray-50 min-h-screen">
       
-      {/* Hero Section */}
       <section className="bg-blue-700 text-white py-24 text-center px-4 shadow-lg">
         <h2 className="text-4xl md:text-6xl font-extrabold mb-6">Empowering Your Digital Future</h2>
         <p className="text-xl mb-8 max-w-2xl mx-auto text-blue-100">
@@ -99,7 +128,7 @@ const Home = () => {
           <button type="submit" className="bg-blue-700 text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">
             Send Message
           </button>
-          {status && <p className="text-center mt-4 font-semibold text-blue-700">{status}</p>}
+          {status && <p className={`text-center mt-4 font-semibold ${status.includes('Failed') ? 'text-red-600' : 'text-blue-700'}`}>{status}</p>}
         </form>
       </section>
 
