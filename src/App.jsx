@@ -6,6 +6,8 @@ import ITConsulting from './pages/ITConsulting';
 import RefurbishedLaptops from './pages/RefurbishedLaptops';
 import Networking from './pages/Networking';
 import ITAccessories from './pages/ITAccessories';
+import AdminLogin from './admin/AdminLogin';
+import AdminDashboard from './admin/AdminDashboard';
 
 function App() {
   return (
@@ -16,10 +18,9 @@ function App() {
         <nav className="bg-white shadow-md p-4 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <Link to="/" className="text-2xl font-bold text-blue-700">CHHAVA IT SOLUTION</Link>
-            <div className="hidden md:flex space-x-6 font-semibold text-gray-600">
+            <div className="hidden md:flex space-x-9 font-semibold text-gray-600">
               <Link to="/" className="hover:text-blue-700 transition">Home</Link>
               <Link to="/#services" className="hover:text-blue-700 transition">Services</Link>
-              <Link to="/#how-we-work" className="hover:text-blue-700 transition">How We Work</Link>
               <Link to="/#contact" className="hover:text-blue-700 transition">Contact</Link>
             </div>
           </div>
@@ -35,26 +36,31 @@ function App() {
             <Route path="/services/networking" element={<Networking />} />
             <Route path="/services/cctv-security" element={<CCTVSecurity />} />
             <Route path="/services/it-accessories" element={<ITAccessories />} />
+            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Routes>
         </main>
 
         {/* === GLOBAL FOOTER === */}
-        <footer className="bg-gray-900 text-gray-300 py-8 mt-auto">
+        <footer className="bg-gray-900 text-gray-300 py-4 mt-auto">
           <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between gap-8 text-center md:text-left">
             <div>
-              <h3 className="text-xl font-bold text-white mb-4">Stratum IT India</h3>
+              {/* Secret Admin Login Trigger */}
+              <Link to="/admin" className="text-xl font-bold text-white mb-4 block cursor-default">
+                CHHAVA IT SOLUTION
+              </Link>
             </div>
             <div>
               <h3 className="text-xl font-bold text-white mb-4">Contact Info</h3>
               <ul className="space-y-2 text-gray-400">
-                <li>Email: info@stratumitindia.com</li>
-                <li>Phone: +91 12345 67890</li>
+                <li>Email: chhavaitsolution@gmail.com</li>
+                <li>Phone: +91 9850260032</li>
                 <li>Location: Maharashtra, India</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
-            <p>&copy; {new Date().getFullYear()} Stratum IT India. All rights reserved.</p>
+          <div className="border-t border-gray-800 mt-5 pt-5 text-center text-gray-500">
+            <p>&copy; {new Date().getFullYear()} CHHAVA IT SOLUTION. All rights reserved.</p>
           </div>
         </footer>
 
