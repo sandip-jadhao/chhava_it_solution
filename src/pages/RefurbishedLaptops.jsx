@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
 const RefurbishedLaptops = () => {
   const [laptops, setLaptops] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchLaptops();
   }, []);
+
+  const handleProductClick = (productName) => {
+    // Navigate to home and pass the product name in the state
+    navigate('/#contact', { state: { interestedProduct: productName } });
+  };  
 
   const fetchLaptops = async () => {
     try {
@@ -28,6 +35,7 @@ const RefurbishedLaptops = () => {
     : laptops.filter(laptop => laptop.category === activeFilter);
 
   return (
+    
     <div className="bg-blue-50/30 flex-grow py-12 px-4 sm:px-6 lg:px-8 font-sans min-h-screen">
       <div className="max-w-7xl mx-auto">
         
@@ -73,7 +81,12 @@ const RefurbishedLaptops = () => {
                 : null;
 
               return (
-                <div key={laptop.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col hover:shadow-md transition group relative">
+                // Added onClick handler and cursor-pointer to the main card wrapper
+                <div 
+                  key={laptop.id} 
+                  onClick={() => handleProductClick(`${laptop.brand} ${laptop.model}`)}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col hover:shadow-md transition group relative cursor-pointer"
+                >
                   
                   {/* Brand Badge (Simulated top right) */}
                   <div className="absolute top-4 right-4 bg-white rounded-full p-1 shadow-sm border border-gray-100 z-10">
@@ -112,7 +125,7 @@ const RefurbishedLaptops = () => {
 
                   {/* Price */}
                   <div className="mt-auto">
-                    <p className="text-xl font-black text-red-600">
+                    <p className="text-xl font-black text-black">
                       ₹ {laptop.price.toLocaleString('en-IN')}
                     </p>
                   </div>
